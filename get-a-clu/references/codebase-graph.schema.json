@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/codebase-graph.schema.json",
+  "title": "Codebase graph",
+  "description": "A codebase described as a graph of nodes (code elements) and edges (relations). See docs/SCHEMA.md.",
+  "type": "object",
+  "required": ["version", "codebase", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": "1.0", "description": "Schema version. Only \"1.0\" is supported." },
+    "codebase": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "description": "Markdown." },
+        "entryPoints": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Node ids." }
+      }
+    },
+    "nodes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
+    "tours": { "type": "array", "items": { "$ref": "#/$defs/tour" } }
+  },
+  "$defs": {
+    "markdown": { "type": "string", "description": "CommonMark + GFM. Raw HTML is not rendered." },
+    "node": {
+      "type": "object",
+      "required": ["id", "kind", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "Unique across all nodes." },
+        "kind": {
+          "enum": ["repository", "package", "directory", "file", "module", "class", "interface", "function", "method", "variable"]
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "parent": { "type": "string", "minLength": 1, "description": "Id of the containing node. Containment comes only from this field." },
+        "summary": { "$ref": "#/$defs/markdown" },
+        "description": { "$ref": "#/$defs/markdown" },
+        "path": { "type": "string" },
+        "startLine": { "type": "integer", "minimum": 1 },
+        "endLine": { "type": "integer", "minimum": 1 },
+        "code": { "type": "string", "description": "Source snippet shown with syntax highlighting." },
+        "language": { "type": "string", "description": "highlight.js language name, e.g. typescript, python." },
+        "metrics": { "type": "object", "additionalProperties": { "type": "number" }, "description": "e.g. loc, complexity." },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["source", "target", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["imports", "calls", "inherits", "implements", "references"] },
+        "description": { "$ref": "#/$defs/markdown" },
+        "weight": { "type": "number" }
+      }
+    },
+    "tour": {
+      "type": "object",
+      "required": ["id", "title", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "$ref": "#/$defs/markdown" },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["nodeId", "narrative"],
+            "additionalProperties": false,
+            "properties": {
+              "nodeId": { "type": "string", "minLength": 1 },
+              "title": { "type": "string" },
+              "narrative": { "$ref": "#/$defs/markdown" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
