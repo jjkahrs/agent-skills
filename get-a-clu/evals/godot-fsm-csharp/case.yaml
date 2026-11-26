@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: godot-fsm-csharp
+expected_outcome: |
+  A clu JSON for the small C# Godot FSM library: schema-valid, zero warnings, its C# classes with correct line ranges, inherits/references and calls edges, summaries and a tour.

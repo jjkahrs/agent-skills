@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: chthonic-polyglot
+expected_outcome: |
+  A clu JSON covering all four services (auth, admin in TypeScript; world, chat in C++), schema-valid with zero warnings, class/function nodes with correct line ranges, includes/imports and calls edges, and a tour tracing how a player connects and enters the world.

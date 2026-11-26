@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: clu-self
+expected_outcome: |
+  A clu JSON for the clu repo itself (TypeScript/React) that passes the schema, loads with zero warnings, has file/class/function nodes with correct line ranges, imports and calls edges, summaries, entry points and at least one tour.
